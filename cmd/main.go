@@ -35,17 +35,17 @@ func SelectIssue(config configuration.Config) (string, error) {
 	return issues.Issues[index].Id, nil
 }
 
-func SelectSuffix() (string, error) {
-	suffixPrompt := promptui.Prompt{
-		Label:       "[Optional] suffix",
+func SelectTaskName() (string, error) {
+	prompt := promptui.Prompt{
+		Label:       "[Optional] task name",
 		Stdout:      os.Stderr,
 		HideEntered: true,
 	}
-	suffix, err := suffixPrompt.Run()
+	taskName, err := prompt.Run()
 	if err != nil {
 		return "", err
 	}
-	return strings.ReplaceAll(strings.TrimSpace(suffix), " ", "_"), nil
+	return strings.ReplaceAll(strings.TrimSpace(taskName), " ", "_"), nil
 }
 
 func main() {
@@ -56,22 +56,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	issue, err := SelectIssue(*config)
+	issueKey, err := SelectIssue(*config)
 	if err != nil {
-		fmt.Errorf("cannot find issue: %s", err)
+		fmt.Errorf("cannot find issueKey: %s", err)
 		os.Exit(1)
 	}
 
-	suffix, err := SelectSuffix()
+	issueName, err := SelectTaskName()
 	if err != nil {
-		fmt.Errorf("cannot select suffix %s", err)
+		fmt.Errorf("cannot select issueName %s", err)
 		os.Exit(1)
 	}
 
-	if len(suffix) > 0 {
-		fmt.Println(fmt.Sprintf("%s_%s", issue, suffix))
+	if len(issueName) > 0 {
+		fmt.Println(fmt.Sprintf("%s_%s", issueKey, issueName))
 	} else {
-		fmt.Println(issue)
+		fmt.Println(issueKey)
 	}
 
 }
