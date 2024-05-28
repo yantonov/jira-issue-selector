@@ -31,7 +31,7 @@ type JIRAIssueListResponse struct {
 }
 
 func (e JIRATicketListLoader) Load(config configuration.Config) (*model.IssueList, error) {
-	const JQL = "status in (Blocked, 'In Progress', Open, Reopened) AND created >= -30d AND assignee in (currentUser()) order by created DESC"
+	const JQL = "status in (Blocked, 'In Progress', Open, Reopened, Review) AND created >= -30d AND assignee in (currentUser()) order by created DESC"
 	client := http.Client{
 		Timeout: 10 * time.Second,
 	}
