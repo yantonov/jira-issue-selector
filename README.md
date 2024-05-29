@@ -14,8 +14,12 @@ In particular, can be used to simplify creating git branches by selecting the on
     export JIRA_HOSTNAME=https://company-name.attlasian.net
     export JIRA_API_KEY=private-api-key
 ```
-3. define custom git alias, for example, like this
+3. define custom git alias, for example, like this  
+
+.gitconfig
 ```
+    [alias]
+    ...
     jira="!f() { issue=$(jira-issue-selector); if [ ! $? = 0 ]; then exit 1; fi; git co -b "$issue"; }; f"
 ```
 4. enjoy :)
