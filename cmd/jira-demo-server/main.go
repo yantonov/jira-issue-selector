@@ -36,6 +36,7 @@ func getSampleIssues() []jira.JIRAIssueResponse {
 func main() {
 
 	http.HandleFunc("/rest/api/2/search", listOfAssignedTickets)
-
-	http.ListenAndServe(":8090", nil)
+	port := 8090
+	fmt.Printf("Starting server on port %d\n", port)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
