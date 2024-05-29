@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-type JIRATicketListLoader struct{}
+type JIRAIssueListLoader struct{}
 
 type JIRAFieldsResponse struct {
 	Summary string `json:"summary"`
@@ -30,13 +30,13 @@ type JIRAIssueListResponse struct {
 	Issues     []JIRAIssueResponse `json:"issues"`
 }
 
-func (e JIRATicketListLoader) Load(config configuration.Config) (*model.IssueList, error) {
+func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList, error) {
 	const JQL = "status in (Blocked, 'In Progress', Open, Reopened, Review) AND created >= -30d AND assignee in (currentUser()) order by created DESC"
 	client := http.Client{
 		Timeout: 10 * time.Second,
 	}
 	req, err := http.NewRequest(http.MethodGet,
-		fmt.Sprintf("https://%s/rest/api/2/search?jql=%s", config.HostName, EncodeParam(JQL)),
+		fmt.Sprintf("%s/rest/api/2/search?jql=%s", config.HostName, EncodeParam(JQL)),
 		http.NoBody)
 	if err != nil {
 		return nil, err

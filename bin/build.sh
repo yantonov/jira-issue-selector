@@ -3,5 +3,5 @@ set -o errexit -o nounset
 
 cd "$(dirname "$0")/.."
 
-go build -o jira-issue-selector cmd/main.go 
+go build -o target/jira-issue-selector cmd/jira-issue-selector/main.go 
 

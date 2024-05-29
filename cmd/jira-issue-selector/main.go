@@ -10,7 +10,7 @@ import (
 )
 
 func SelectIssue(config configuration.Config) (string, error) {
-	issues, err := jira.JIRATicketListLoader{}.Load(config)
+	issues, err := jira.JIRAIssueListLoader{}.Load(config)
 	if err != nil {
 		return "", err
 	}

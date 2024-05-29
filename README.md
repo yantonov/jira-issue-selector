@@ -10,8 +10,8 @@ In particular, can be used to simplify creating git branches by selecting the on
 1. put the binary to the PATH
 2. define settings
 ```
-    export JIRA_USER=username
-    export JIRA_HOSTNAME=company.attlasian.net
+    export JIRA_USER=username@company-domain
+    export JIRA_HOSTNAME=https://company-name.attlasian.net
     export JIRA_API_KEY=private-api-key
 ```
 3. define custom git alias, for example, like this
