@@ -52,19 +52,19 @@ func main() {
 
 	config, err := configuration.EnvVarConfigLoader{}.Load()
 	if err != nil {
-		fmt.Errorf("cannot load config: %s", err)
+		fmt.Println(fmt.Errorf("cannot load config: %s", err))
 		os.Exit(1)
 	}
 
 	issueKey, err := SelectIssue(*config)
 	if err != nil {
-		fmt.Errorf("cannot find issueKey: %s", err)
+		fmt.Println(fmt.Errorf("cannot find issueKey: %s", err))
 		os.Exit(1)
 	}
 
 	issueName, err := SelectTaskName()
 	if err != nil {
-		fmt.Errorf("cannot select issueName %s", err)
+		fmt.Println(fmt.Errorf("cannot select issueName %s", err))
 		os.Exit(1)
 	}
 
