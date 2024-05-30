@@ -64,16 +64,25 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 
 func ToList(parsed JIRAIssueListResponse) *model.IssueList {
 	var issues []model.Issue
+	const maxSummaryLength = 80
+	// TODO: add cmd param
 	for _, issueItem := range parsed.Issues {
 		issues = append(issues, model.Issue{
 			Id:      issueItem.Key,
-			Summary: issueItem.Fields.Summary,
+			Summary: trim(issueItem.Fields.Summary, maxSummaryLength),
 		})
 	}
 	return &model.IssueList{
 		Total:  parsed.Total,
 		Issues: issues,
 	}
+}
+
+func trim(summary string, maxLength int) string {
+	if len(summary) > maxLength {
+		return summary[:maxLength] + "..."
+	}
+	return summary
 }
 
 func EncodeParam(s string) string {
