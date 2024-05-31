@@ -9,6 +9,7 @@ import (
 	"jira-ticket-selector/lib/model"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -31,8 +32,9 @@ type JIRAIssueListResponse struct {
 }
 
 func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList, error) {
-	// TODO: add parameter to define list of statuses (by default current version can be used)
-	const JQL = "status not in (Done, Killed, Closed, Incomplete, Resolved) AND assignee in (currentUser()) order by created DESC"
+	// TODO: parameterize order by statement
+	JQL := fmt.Sprintf("status not in (%s) AND assignee in (currentUser()) order by created DESC",
+		strings.Join(config.TerminalStatuses, ", "))
 	client := http.Client{
 		Timeout: 10 * time.Second,
 	}

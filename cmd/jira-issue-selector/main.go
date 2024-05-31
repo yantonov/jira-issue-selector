@@ -49,7 +49,6 @@ func SelectTaskName() (string, error) {
 }
 
 func main() {
-
 	config, err := configuration.EnvVarConfigLoader{}.Load()
 	if err != nil {
 		fmt.Println(fmt.Errorf("cannot load config: %s", err))
