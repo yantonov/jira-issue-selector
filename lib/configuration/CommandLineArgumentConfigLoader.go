@@ -23,7 +23,7 @@ func (e CommandLineArgumentConfigLoader) Load() Config {
 	terminalStatuses := flag.String(
 		"terminal-statuses",
 		DefaultTerminalStatuses,
-		" Terminal statuses. Alternatively env var: "+JIRATerminalStatuses)
+		"Terminal statuses. Alternatively env var: "+JIRATerminalStatuses)
 
 	flag.Parse()
 
