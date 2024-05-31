@@ -31,6 +31,7 @@ type JIRAIssueListResponse struct {
 }
 
 func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList, error) {
+	// TODO: add parameter to define list of statuses (by default current version can be used)
 	const JQL = "status not in (Done, Killed) AND created >= -30d AND assignee in (currentUser()) order by created DESC"
 	client := http.Client{
 		Timeout: 10 * time.Second,
