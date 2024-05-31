@@ -6,3 +6,5 @@ type Config struct {
 	ApiKey           string
 	TerminalStatuses []string
 }
+
+const DefaultTerminalStatuses = "Done, Killed, Closed, Incomplete, Resolved"

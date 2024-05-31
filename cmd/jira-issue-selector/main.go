@@ -49,13 +49,14 @@ func SelectTaskName() (string, error) {
 }
 
 func main() {
-	config, err := configuration.EnvVarConfigLoader{}.Load()
+	config := configuration.MainConfigReader{}.Load()
+	err := configuration.ValidateConfig(config)
 	if err != nil {
-		fmt.Println(fmt.Errorf("cannot load config: %s", err))
+		fmt.Println(fmt.Errorf("invalid configuration: %s", err))
 		os.Exit(1)
 	}
 
-	issueKey, err := SelectIssue(*config)
+	issueKey, err := SelectIssue(config)
 	if err != nil {
 		fmt.Println(fmt.Errorf("cannot find issueKey: %s", err))
 		os.Exit(1)
