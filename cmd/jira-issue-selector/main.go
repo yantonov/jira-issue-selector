@@ -25,6 +25,7 @@ func SelectIssue(config configuration.Config) (string, error) {
 		HideSelected: true,
 		HideHelp:     true,
 		Stdout:       os.Stderr,
+		Size:         10, // TODO: parameterize
 	}
 
 	index, _, err := prompt.Run()
