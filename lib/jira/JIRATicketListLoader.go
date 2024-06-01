@@ -33,7 +33,7 @@ type JIRAIssueListResponse struct {
 
 func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList, error) {
 	// TODO: parameterize order by statement
-	JQL := fmt.Sprintf("status not in (%s) AND assignee in (currentUser()) order by created DESC",
+	JQL := fmt.Sprintf("status not in (%s) AND assignee in (currentUser()) order by updated DESC",
 		strings.Join(config.TerminalStatuses, ", "))
 	client := http.Client{
 		Timeout: 10 * time.Second,
