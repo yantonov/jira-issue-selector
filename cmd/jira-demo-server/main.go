@@ -22,7 +22,8 @@ func listOfAssignedTickets(w http.ResponseWriter, req *http.Request) {
 
 func getSampleIssues() []jira.JIRAIssueResponse {
 	var issues []jira.JIRAIssueResponse
-	for i := 1; i <= 5; i++ {
+	numberOfIssues := 20
+	for i := 1; i <= numberOfIssues; i++ {
 		issues = append(issues, jira.JIRAIssueResponse{
 			Key: fmt.Sprintf("PROJECT-10%d", i),
 			Fields: jira.JIRAFieldsResponse{
