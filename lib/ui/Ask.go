@@ -3,6 +3,7 @@ package ui
 import (
 	"fmt"
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
 	"jira-ticket-selector/lib/configuration"
 	"jira-ticket-selector/lib/jira"
 	"os"
@@ -23,6 +24,9 @@ func AskUser(config configuration.Config) (*Selection, error) {
 
 	var selectedIssueId string
 	var taskName string
+
+	// https://github.com/charmbracelet/bubbletea/issues/860#issuecomment-2195038765
+	lipgloss.SetDefaultRenderer(lipgloss.NewRenderer(os.Stderr))
 
 	form := huh.NewForm(
 		huh.NewGroup(
