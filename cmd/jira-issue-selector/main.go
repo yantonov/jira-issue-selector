@@ -2,52 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/manifoldco/promptui"
 	"jira-ticket-selector/lib/configuration"
-	"jira-ticket-selector/lib/jira"
+	"jira-ticket-selector/lib/ui"
 	"os"
-	"strings"
 )
-
-func SelectIssue(config configuration.Config) (string, error) {
-	issues, err := jira.JIRAIssueListLoader{}.Load(config)
-	if err != nil {
-		return "", err
-	}
-	var items []string
-	for _, issue := range issues.Issues {
-		items = append(items, fmt.Sprintf("%s - %s", issue.Id, issue.Summary))
-	}
-
-	prompt := promptui.Select{
-		Label:        "Select issue",
-		Items:        items,
-		HideSelected: true,
-		HideHelp:     true,
-		Stdout:       os.Stderr,
-		Size:         10, // TODO: parameterize
-	}
-
-	index, _, err := prompt.Run()
-
-	if err != nil {
-		return "", err
-	}
-	return issues.Issues[index].Id, nil
-}
-
-func SelectTaskName() (string, error) {
-	prompt := promptui.Prompt{
-		Label:       "[Optional] task name",
-		Stdout:      os.Stderr,
-		HideEntered: true,
-	}
-	taskName, err := prompt.Run()
-	if err != nil {
-		return "", err
-	}
-	return strings.ReplaceAll(strings.TrimSpace(taskName), " ", "_"), nil
-}
 
 func main() {
 	config := configuration.MainConfigReader{}.Load()
@@ -57,22 +15,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	issueKey, err := SelectIssue(config)
+	selection, err := ui.AskUser(config)
 	if err != nil {
-		fmt.Println(fmt.Errorf("cannot find issueKey: %s", err))
+		fmt.Println(fmt.Errorf("cannot select issue: %s", err))
 		os.Exit(1)
 	}
 
-	issueName, err := SelectTaskName()
-	if err != nil {
-		fmt.Println(fmt.Errorf("cannot select issueName %s", err))
-		os.Exit(1)
-	}
-
-	if len(issueName) > 0 {
-		fmt.Println(fmt.Sprintf("%s_%s", issueKey, issueName))
+	if len(selection.TaskName) > 0 {
+		fmt.Println(fmt.Sprintf("%s_%s", selection.IssueId, selection.TaskName))
 	} else {
-		fmt.Println(issueKey)
+		fmt.Println(selection.IssueId)
 	}
 
 }
