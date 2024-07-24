@@ -9,10 +9,6 @@ type Config struct {
 	TerminalStatuses []string
 }
 
-type ConfigLoader interface {
-	LoadConfig() Config
-}
-
 const DefaultTerminalStatuses = "Done, Killed, Closed, Incomplete, Resolved"
 
 func ParseTerminalStatuses(envVar string) []string {
