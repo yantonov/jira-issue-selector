@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"context"
 	"fmt"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
@@ -10,7 +11,10 @@ import (
 	"strings"
 )
 
-func AskUser(config configuration.Config) (*Selection, error) {
+func AskUser(
+	ctx context.Context,
+	config configuration.Config,
+) (*Selection, error) {
 	issues, err := jira.JIRAIssueListLoader{}.Load(config)
 	if err != nil {
 		return nil, err
@@ -40,8 +44,7 @@ func AskUser(config configuration.Config) (*Selection, error) {
 				Value(&taskName))).
 		WithOutput(os.Stderr)
 
-	formErr := form.Run()
-	if formErr != nil {
+	if err := form.RunWithContext(ctx); err != nil {
 		return nil, err
 	}
 
