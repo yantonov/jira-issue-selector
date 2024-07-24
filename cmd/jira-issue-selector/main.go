@@ -24,10 +24,10 @@ func main() {
 	selection, err := ui.AskUser(ctx, config)
 	if err != nil {
 		if errors.Is(err, huh.ErrUserAborted) {
-			fmt.Println("cancelled by user")
+			fmt.Fprintf(os.Stderr, "cancelled by user")
 			os.Exit(1)
 		} else {
-			fmt.Println(fmt.Sprintf("unexpected error: %v", err))
+			fmt.Fprintf(os.Stderr, "unexpected error: %v", err)
 			os.Exit(100)
 		}
 	}
