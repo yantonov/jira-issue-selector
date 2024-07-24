@@ -58,8 +58,7 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 		return nil, errors.New(fmt.Sprintf("Invalid status code=%s response=[%s]", response.Status, responseBody))
 	}
 	var parsed JIRAIssueListResponse
-	err = json.Unmarshal(responseBody, &parsed)
-	if err != nil {
+	if err := json.Unmarshal(responseBody, &parsed); err != nil {
 		return nil, err
 	}
 	return ToList(parsed), nil

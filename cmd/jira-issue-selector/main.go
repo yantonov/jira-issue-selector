@@ -13,8 +13,7 @@ import (
 
 func main() {
 	config := configuration.MainConfigReader{}.Load()
-	err := configuration.ValidateConfig(config)
-	if err != nil {
+	if err := configuration.ValidateConfig(config); err != nil {
 		fmt.Println(fmt.Errorf("invalid configuration: %s", err))
 		os.Exit(1)
 	}
