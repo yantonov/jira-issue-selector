@@ -71,6 +71,20 @@ func generateTaskName(issues *model.IssueList, selectedIssueId string, taskName 
 	return ""
 }
 
+func substr(input string, start int, length int) string {
+	asRunes := []rune(input)
+
+	if start >= len(asRunes) {
+		return ""
+	}
+
+	if start+length > len(asRunes) {
+		length = len(asRunes) - start
+	}
+
+	return string(asRunes[start : start+length])
+}
+
 func normalizeTaskName(issueTitle string) string {
 	invalidCharacters := regexp.MustCompile(`[^a-zA-Z0-9_ ]+`)
 
@@ -80,5 +94,6 @@ func normalizeTaskName(issueTitle string) string {
 
 	sequentialWhiteSpaces := regexp.MustCompile(` +`)
 	whiteSpacesAreReplacedByUnderscore := sequentialWhiteSpaces.ReplaceAllString(lowercased, "_")
-	return whiteSpacesAreReplacedByUnderscore
+	const MaxTaskNameLength = 70
+	return substr(whiteSpacesAreReplacedByUnderscore, 0, MaxTaskNameLength)
 }
