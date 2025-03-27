@@ -7,7 +7,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"jira-ticket-selector/lib/configuration"
 	"jira-ticket-selector/lib/jira"
+	"jira-ticket-selector/lib/model"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -22,7 +24,7 @@ func AskUser(
 
 	var items []huh.Option[string]
 	for _, issue := range issues.Issues {
-		items = append(items, huh.NewOption(fmt.Sprintf("%s - %s", issue.Id, issue.Summary),
+		items = append(items, huh.NewOption(fmt.Sprintf("%s - %s", issue.Id, issue.Title),
 			issue.Id))
 	}
 
@@ -48,8 +50,35 @@ func AskUser(
 		return nil, err
 	}
 
+	var finalTaskName = generateTaskName(issues, selectedIssueId, taskName)
+
 	return &Selection{
 		strings.TrimSpace(selectedIssueId),
-		strings.TrimSpace(taskName),
+		finalTaskName,
 	}, nil
+}
+
+func generateTaskName(issues *model.IssueList, selectedIssueId string, taskName string) string {
+	var normalizedTaskName = normalizeTaskName(taskName)
+	if normalizedTaskName != "" {
+		return normalizedTaskName
+	}
+	for _, issue := range issues.Issues {
+		if issue.Id == selectedIssueId {
+			return normalizeTaskName(issue.Title)
+		}
+	}
+	return ""
+}
+
+func normalizeTaskName(issueTitle string) string {
+	invalidCharacters := regexp.MustCompile(`[^a-zA-Z0-9_ ]+`)
+
+	withoutSpecialChars := invalidCharacters.ReplaceAllString(issueTitle, "")
+	trimmed := strings.TrimSpace(withoutSpecialChars)
+	lowercased := strings.ToLower(trimmed)
+
+	sequentialWhiteSpaces := regexp.MustCompile(` +`)
+	whiteSpacesAreReplacedByUnderscore := sequentialWhiteSpaces.ReplaceAllString(lowercased, "_")
+	return whiteSpacesAreReplacedByUnderscore
 }

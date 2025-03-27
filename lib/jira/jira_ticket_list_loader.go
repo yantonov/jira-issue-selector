@@ -70,8 +70,8 @@ func ToList(parsed JIRAIssueListResponse) *model.IssueList {
 	// TODO: add cmd param
 	for _, issueItem := range parsed.Issues {
 		issues = append(issues, model.Issue{
-			Id:      issueItem.Key,
-			Summary: trim(issueItem.Fields.Summary, maxSummaryLength),
+			Id:    issueItem.Key,
+			Title: trim(issueItem.Fields.Summary, maxSummaryLength),
 		})
 	}
 	return &model.IssueList{
