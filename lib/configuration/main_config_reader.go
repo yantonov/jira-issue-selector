@@ -12,10 +12,11 @@ func (e MainConfigReader) Load() Config {
 	envVarConfig := EnvVarConfigLoader{}.Load()
 
 	config := Config{
-		User:             cmdArgConfig.User,
-		HostName:         cmdArgConfig.HostName,
-		ApiKey:           cmdArgConfig.ApiKey,
-		TerminalStatuses: cmdArgConfig.TerminalStatuses,
+		User:               cmdArgConfig.User,
+		HostName:           cmdArgConfig.HostName,
+		ApiKey:             cmdArgConfig.ApiKey,
+		TerminalStatuses:   cmdArgConfig.TerminalStatuses,
+		IncludeTicketTitle: cmdArgConfig.IncludeTicketTitle,
 	}
 	if config.User == "" {
 		config.User = envVarConfig.User
@@ -29,6 +30,7 @@ func (e MainConfigReader) Load() Config {
 	if len(config.TerminalStatuses) == 0 {
 		config.TerminalStatuses = envVarConfig.TerminalStatuses
 	}
+	config.IncludeTicketTitle = cmdArgConfig.IncludeTicketTitle || envVarConfig.IncludeTicketTitle
 	return config
 }
 

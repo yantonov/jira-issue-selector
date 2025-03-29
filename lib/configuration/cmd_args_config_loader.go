@@ -25,12 +25,18 @@ func (e CommandLineArgumentConfigLoader) Load() Config {
 		DefaultTerminalStatuses,
 		"Terminal statuses. Alternatively env var: "+JIRATerminalStatuses)
 
+	includeTicketTitle := flag.Bool(
+		"include-ticket-title",
+		false,
+		"Include ticket title in the task name. Default: false. Alternatively env var: "+JIRAIncludeTicketTitle)
+
 	flag.Parse()
 
 	return Config{
-		User:             *user,
-		HostName:         *hostname,
-		ApiKey:           *apikey,
-		TerminalStatuses: ParseTerminalStatuses(*terminalStatuses),
+		User:               *user,
+		HostName:           *hostname,
+		ApiKey:             *apikey,
+		TerminalStatuses:   ParseTerminalStatuses(*terminalStatuses),
+		IncludeTicketTitle: *includeTicketTitle,
 	}
 }

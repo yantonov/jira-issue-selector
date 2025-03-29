@@ -29,7 +29,7 @@ func AskUser(
 	}
 
 	var selectedIssueId string
-	var taskName string
+	var customTaskName string
 
 	// https://github.com/charmbracelet/bubbletea/issues/860#issuecomment-2195038765
 	lipgloss.SetDefaultRenderer(lipgloss.NewRenderer(os.Stderr))
@@ -43,14 +43,14 @@ func AskUser(
 			huh.NewText().
 				Title("Task name [optional]").
 				CharLimit(400).
-				Value(&taskName))).
+				Value(&customTaskName))).
 		WithOutput(os.Stderr)
 
 	if err := form.RunWithContext(ctx); err != nil {
 		return nil, err
 	}
 
-	var finalTaskName = generateTaskName(issues, selectedIssueId, taskName)
+	var finalTaskName = generateTaskName(issues, selectedIssueId, customTaskName, config)
 
 	return &Selection{
 		strings.TrimSpace(selectedIssueId),
@@ -58,14 +58,16 @@ func AskUser(
 	}, nil
 }
 
-func generateTaskName(issues *model.IssueList, selectedIssueId string, taskName string) string {
-	var normalizedTaskName = normalizeTaskName(taskName)
+func generateTaskName(issues *model.IssueList, selectedIssueId string, customTaskName string, config configuration.Config) string {
+	var normalizedTaskName = normalizeTaskName(customTaskName)
 	if normalizedTaskName != "" {
 		return normalizedTaskName
 	}
-	for _, issue := range issues.Issues {
-		if issue.Id == selectedIssueId {
-			return normalizeTaskName(issue.Title)
+	if config.IncludeTicketTitle {
+		for _, issue := range issues.Issues {
+			if issue.Id == selectedIssueId {
+				return normalizeTaskName(issue.Title)
+			}
 		}
 	}
 	return ""

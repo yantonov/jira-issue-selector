@@ -3,10 +3,11 @@ package configuration
 import "strings"
 
 type Config struct {
-	HostName         string
-	User             string
-	ApiKey           string
-	TerminalStatuses []string
+	HostName           string
+	User               string
+	ApiKey             string
+	TerminalStatuses   []string
+	IncludeTicketTitle bool // if true, the ticket title will be added if no custom task name is provided
 }
 
 const DefaultTerminalStatuses = "Done, Killed, Closed, Incomplete, Resolved"
