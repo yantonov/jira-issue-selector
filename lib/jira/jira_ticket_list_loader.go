@@ -39,7 +39,7 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 		Timeout: 10 * time.Second,
 	}
 	req, err := http.NewRequest(http.MethodGet,
-		fmt.Sprintf("%s/rest/api/2/search?jql=%s", config.HostName, EncodeParam(JQL)),
+		fmt.Sprintf("%s/rest/api/3/search/jql?jql=%s&fields=key,summary", config.HostName, EncodeParam(JQL)),
 		http.NoBody)
 	if err != nil {
 		return nil, err
