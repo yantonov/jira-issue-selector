@@ -3,14 +3,15 @@ package ui
 import (
 	"context"
 	"fmt"
-	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
 	"jira-ticket-selector/lib/configuration"
 	"jira-ticket-selector/lib/jira"
 	"jira-ticket-selector/lib/model"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
 )
 
 func AskUser(
@@ -37,7 +38,7 @@ func AskUser(
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().
-				Title("Select issue").
+				Title("Select issue, press / for filtering").
 				Options(items...).
 				Value(&selectedIssueId),
 			huh.NewText().
