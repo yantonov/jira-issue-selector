@@ -10,7 +10,7 @@ type Config struct {
 	IncludeTicketTitle bool // if true, the ticket title will be added if no custom task name is provided
 }
 
-const DefaultTerminalStatuses = "Done, Killed, Closed, Incomplete, Resolved"
+const DefaultTerminalStatuses = "Done, Killed, Closed, Incomplete, Resolved, Canceled"
 
 func ParseTerminalStatuses(envVar string) []string {
 	tokens := strings.Split(envVar, ",")
