@@ -54,14 +54,15 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 	if err != nil {
 		return nil, err
 	}
-	if response.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("Invalid status code=%s response=[%s]", response.Status, responseBody))
-	}
 	var parsed JIRAIssueListResponse
 	if err := json.Unmarshal(responseBody, &parsed); err != nil {
 		return nil, err
 	}
-	return ToList(parsed), nil
+	result := ToList(parsed)
+	if len(result.Issues) == 0 {
+		return nil, errors.New("No tickets found. Please check your JIRA_API_KEY and ensure it's valid.")
+	}
+	return result, nil
 }
 
 func ToList(parsed JIRAIssueListResponse) *model.IssueList {
@@ -90,3 +91,5 @@ func trim(summary string, maxLength int) string {
 func EncodeParam(s string) string {
 	return url.QueryEscape(s)
 }
+
+
