@@ -54,6 +54,9 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 	if err != nil {
 		return nil, err
 	}
+	if response.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("Please check your JIRA_API_KEY and ensure it's valid. Invalid status code=%s response=[%s]", response.Status, responseBody))
+	}
 	var parsed JIRAIssueListResponse
 	if err := json.Unmarshal(responseBody, &parsed); err != nil {
 		return nil, err
@@ -91,5 +94,3 @@ func trim(summary string, maxLength int) string {
 func EncodeParam(s string) string {
 	return url.QueryEscape(s)
 }
-
-
