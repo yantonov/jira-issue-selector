@@ -31,6 +31,11 @@ func (e MainConfigReader) Load() Config {
 		config.TerminalStatuses = envVarConfig.TerminalStatuses
 	}
 	config.IncludeTicketTitle = cmdArgConfig.IncludeTicketTitle || envVarConfig.IncludeTicketTitle
+	if cmdArgConfig.DisplayFormat != "" {
+		config.DisplayFormat = cmdArgConfig.DisplayFormat
+	} else {
+		config.DisplayFormat = envVarConfig.DisplayFormat
+	}
 	return config
 }
 

@@ -10,6 +10,7 @@ const JIRAHostNameEnvVar = "JIRA_HOSTNAME"
 const JIRAApiKeyEnvVar = "JIRA_API_KEY"
 const JIRATerminalStatuses = "JIRA_TERMINAL_STATUSES"
 const JIRAIncludeTicketTitle = "JIRA_INCLUDE_TICKET_TITLE"
+const JIRADisplayFormat = "JIRA_DISPLAY_FORMAT"
 
 type EnvVarConfigLoader struct{}
 
@@ -40,11 +41,17 @@ func (e EnvVarConfigLoader) Load() Config {
 		includeTicketTitle = true
 	}
 
+	displayFormat, b := os.LookupEnv(JIRADisplayFormat)
+	if !b || strings.TrimSpace(displayFormat) == "" {
+		displayFormat = DisplayFormatDefault
+	}
+
 	return Config{
 		HostName:           hostname,
 		User:               user,
 		ApiKey:             apiKey,
 		TerminalStatuses:   ParseTerminalStatuses(terminalStatuses),
 		IncludeTicketTitle: includeTicketTitle,
+		DisplayFormat:      displayFormat,
 	}
 }

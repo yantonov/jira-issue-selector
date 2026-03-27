@@ -25,8 +25,13 @@ func AskUser(
 
 	var items []huh.Option[string]
 	for _, issue := range issues.Issues {
-		items = append(items, huh.NewOption(fmt.Sprintf("%s - %s", issue.Id, issue.Title),
-			issue.Id))
+		var label string
+		if config.DisplayFormat == configuration.DisplayFormatVerbose {
+			label = fmt.Sprintf("[%s] - %s - %s", issue.IssueType, issue.Id, issue.Title)
+		} else {
+			label = fmt.Sprintf("%s - %s", issue.Id, issue.Title)
+		}
+		items = append(items, huh.NewOption(label, issue.Id))
 	}
 
 	var selectedIssueId string

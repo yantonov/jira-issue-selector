@@ -15,8 +15,13 @@ import (
 
 type JIRAIssueListLoader struct{}
 
+type JIRAIssueTypeResponse struct {
+	Name string `json:"name"`
+}
+
 type JIRAFieldsResponse struct {
-	Summary string `json:"summary"`
+	Summary   string                `json:"summary"`
+	IssueType JIRAIssueTypeResponse `json:"issuetype"`
 }
 
 type JIRAIssueResponse struct {
@@ -39,7 +44,7 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 		Timeout: 10 * time.Second,
 	}
 	req, err := http.NewRequest(http.MethodGet,
-		fmt.Sprintf("%s/rest/api/3/search/jql?jql=%s&fields=key,summary", config.HostName, EncodeParam(JQL)),
+		fmt.Sprintf("%s/rest/api/3/search/jql?jql=%s&fields=key,summary,issuetype", config.HostName, EncodeParam(JQL)),
 		http.NoBody)
 	if err != nil {
 		return nil, err
@@ -74,8 +79,9 @@ func ToList(parsed JIRAIssueListResponse) *model.IssueList {
 	// TODO: add cmd param
 	for _, issueItem := range parsed.Issues {
 		issues = append(issues, model.Issue{
-			Id:    issueItem.Key,
-			Title: trim(issueItem.Fields.Summary, maxSummaryLength),
+			Id:        issueItem.Key,
+			Title:     trim(issueItem.Fields.Summary, maxSummaryLength),
+			IssueType: issueItem.Fields.IssueType.Name,
 		})
 	}
 	return &model.IssueList{

@@ -30,6 +30,11 @@ func (e CommandLineArgumentConfigLoader) Load() Config {
 		false,
 		"Include ticket title in the task name. Default: false. Alternatively env var: "+JIRAIncludeTicketTitle)
 
+	displayFormat := flag.String(
+		"format",
+		"",
+		"Display format for ticket list. Options: default, verbose. Alternatively env var: "+JIRADisplayFormat)
+
 	flag.Parse()
 
 	return Config{
@@ -38,5 +43,6 @@ func (e CommandLineArgumentConfigLoader) Load() Config {
 		ApiKey:             *apikey,
 		TerminalStatuses:   ParseTerminalStatuses(*terminalStatuses),
 		IncludeTicketTitle: *includeTicketTitle,
+		DisplayFormat:      *displayFormat,
 	}
 }
