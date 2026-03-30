@@ -32,6 +32,6 @@ func GetIssueId() (string, error) {
 	if len(selection.TaskName) > 0 {
 		return fmt.Sprintf("%s_%s", selection.IssueId, selection.TaskName), nil
 	} else {
-		return fmt.Sprintf(selection.IssueId), nil
+		return selection.IssueId, nil
 	}
 }
