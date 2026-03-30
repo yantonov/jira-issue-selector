@@ -93,15 +93,17 @@ func substr(input string, start int, length int) string {
 	return string(asRunes[start : start+length])
 }
 
-func normalizeTaskName(issueTitle string) string {
-	invalidCharacters := regexp.MustCompile(`[^a-zA-Z0-9_ ]+`)
+var (
+	invalidCharsRe     = regexp.MustCompile(`[^a-zA-Z0-9_ ]+`)
+	sequentialSpacesRe = regexp.MustCompile(` +`)
+)
 
-	withoutSpecialChars := invalidCharacters.ReplaceAllString(issueTitle, "")
+func normalizeTaskName(issueTitle string) string {
+	withoutSpecialChars := invalidCharsRe.ReplaceAllString(issueTitle, "")
 	trimmed := strings.TrimSpace(withoutSpecialChars)
 	lowercased := strings.ToLower(trimmed)
 
-	sequentialWhiteSpaces := regexp.MustCompile(` +`)
-	whiteSpacesAreReplacedByUnderscore := sequentialWhiteSpaces.ReplaceAllString(lowercased, "_")
+	whiteSpacesAreReplacedByUnderscore := sequentialSpacesRe.ReplaceAllString(lowercased, "_")
 	const MaxTaskNameLength = 70
 	return substr(whiteSpacesAreReplacedByUnderscore, 0, MaxTaskNameLength)
 }
