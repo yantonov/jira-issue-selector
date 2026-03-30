@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -41,16 +40,16 @@ func (e MainConfigReader) Load() Config {
 
 func ValidateConfig(config Config) error {
 	if config.User == "" {
-		return errors.New(fmt.Sprintf("User is required. You can define it using command line arg or environment variable %s", JIRAUserEnvVar))
+		return fmt.Errorf("User is required. You can define it using command line arg or environment variable %s", JIRAUserEnvVar)
 	}
 	if config.HostName == "" {
-		return errors.New(fmt.Sprintf("Hostname is required. You can define it using command line arg or environment variable %s", JIRAHostNameEnvVar))
+		return fmt.Errorf("Hostname is required. You can define it using command line arg or environment variable %s", JIRAHostNameEnvVar)
 	}
 	if config.ApiKey == "" {
-		return errors.New(fmt.Sprintf("JIRA API KEY is required. You can define it using command line arg or environment variable %s", JIRAApiKeyEnvVar))
+		return fmt.Errorf("JIRA API KEY is required. You can define it using command line arg or environment variable %s", JIRAApiKeyEnvVar)
 	}
 	if len(config.TerminalStatuses) == 0 {
-		return errors.New(fmt.Sprintf("Terminal statuses are required. You can define it using command line arg or environment variable %s", JIRATerminalStatuses))
+		return fmt.Errorf("Terminal statuses are required. You can define it using command line arg or environment variable %s", JIRATerminalStatuses)
 	}
 	return nil
 }
