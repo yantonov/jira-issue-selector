@@ -54,6 +54,7 @@ func (e JIRAIssueListLoader) Load(config configuration.Config) (*model.IssueList
 	if err != nil {
 		return nil, err
 	}
+	defer response.Body.Close()
 
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
