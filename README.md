@@ -3,7 +3,8 @@
 ## Use case
 
 Select JIRA issue without leaving the terminal.  
-In particular, can be used to simplify creating git branches by selecting the one of assigned issues
+In particular, can be used to simplify creating git branches by selecting the one of assigned issues.  
+Then you can use commit [hook](https://github.com/yantonov/ticket-commit-msg) to update commit message and include ticket number into it.
 
 ## How to
 
