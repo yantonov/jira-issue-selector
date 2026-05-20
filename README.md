@@ -8,7 +8,11 @@ Then you can use commit [hook](https://github.com/yantonov/ticket-commit-msg) to
 
 ## How to
 
-1. put the binary to the PATH
+1. Install to ${HOME}/bin using this script
+   ```bash
+       curl -fsSL "https://raw.githubusercontent.com/yantonov/jira-issue-selector/master/bin/download.sh" | bash"
+   ```
+   or download it manually and add to the PATH
 2. define settings
 ```
     export JIRA_USER=username@company-domain
