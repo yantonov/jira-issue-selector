@@ -1,5 +1,11 @@
 # JIRA issue selector
 
+# Table of contents
+1. [Use case](#use-case)
+2. [How to](#how-to)
+3. [Remarks](#remarks)
+
+
 ## Use case
 
 Select JIRA issue without leaving the terminal.  
