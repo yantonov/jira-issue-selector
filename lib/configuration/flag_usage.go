@@ -69,12 +69,12 @@ func PrintUsageEntries(output io.Writer, entries []UsageEntry) {
 func SetupExamples() []UsageEntry {
 	return []UsageEntry{
 		{
-			Name:        "jira-issue-selector setup",
-			Description: "ask for every setting, the API token is not echoed",
+			Name:        "jira-issue-selector setup " + KeychainUserKey,
+			Description: "ask for the user, the other settings are kept",
 		},
 		{
 			Name:        "jira-issue-selector setup " + KeychainApiKeyKey,
-			Description: "ask for the API token only, the other settings are kept",
+			Description: "ask for the API token, it is not echoed",
 		},
 		{
 			Name:        "jira-issue-selector setup -show",

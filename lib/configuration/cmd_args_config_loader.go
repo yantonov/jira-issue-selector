@@ -21,8 +21,8 @@ func (e CommandLineArgumentConfigLoader) Load(args []string) Config {
 				Description: "select an issue, credentials are read from the keychain",
 			},
 			{
-				Name:        "jira-issue-selector setup [setting]",
-				Description: "store the credentials in the " + KeychainService + " keychain entry",
+				Name:        "jira-issue-selector setup <setting>",
+				Description: "store a single credential in the " + KeychainService + " keychain entry",
 			},
 			{
 				Name:        "jira-issue-selector version, -v, --version",

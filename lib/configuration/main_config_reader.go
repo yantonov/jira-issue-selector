@@ -58,13 +58,13 @@ func (e MainConfigReader) Load(args []string) (Config, error) {
 
 func ValidateConfig(config Config) error {
 	if config.User == "" {
-		return missingCredential("User", JIRAUserEnvVar)
+		return missingCredential("User", KeychainUserKey, JIRAUserEnvVar)
 	}
 	if config.HostName == "" {
-		return missingCredential("Hostname", JIRAHostNameEnvVar)
+		return missingCredential("Hostname", KeychainHostNameKey, JIRAHostNameEnvVar)
 	}
 	if config.ApiKey == "" {
-		return missingCredential("JIRA API KEY", JIRAApiKeyEnvVar)
+		return missingCredential("JIRA API KEY", KeychainApiKeyKey, JIRAApiKeyEnvVar)
 	}
 	if len(config.TerminalStatuses) == 0 {
 		return fmt.Errorf("Terminal statuses are required. You can define them using the -terminal-statuses command line arg")
@@ -72,9 +72,10 @@ func ValidateConfig(config Config) error {
 	return nil
 }
 
-func missingCredential(name string, envVar string) error {
+func missingCredential(name string, setting string, envVar string) error {
 	return fmt.Errorf(
-		"%s is required. Run 'jira-issue-selector setup' to store it in the keychain or define the %s environment variable",
+		"%s is required. Run 'jira-issue-selector setup %s' to store it in the keychain or define the %s environment variable",
 		name,
+		setting,
 		envVar)
 }

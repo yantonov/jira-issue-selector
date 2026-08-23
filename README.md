@@ -23,10 +23,13 @@ Then you can use commit [hook](https://github.com/yantonov/ticket-commit-msg) to
    ```
 
    or download it manually and add to the PATH
-2. setup JIRA settings, they are stored in the keychain provided by your OS
+2. setup JIRA settings, they are stored in the keychain provided by your OS,
+   one setting at a time
 
 ```
-    jira-issue-selector setup
+    jira-issue-selector setup user
+    jira-issue-selector setup hostname
+    jira-issue-selector setup apikey
 ```
 
 3. setup git alias, for example, like this
@@ -52,13 +55,14 @@ Credentials are stored in the keychain provided by your operating system
 under the `jira-issue-selector` service name, one entry per setting: `user`, `hostname`, `apikey`.
 
 ```
-    jira-issue-selector setup           # ask for every setting
     jira-issue-selector setup hostname  # ask for a single setting, the other ones are kept
+    jira-issue-selector setup apikey    # ask for the API token, it is not echoed
     jira-issue-selector setup -show     # display the stored settings, the API token is masked
     jira-issue-selector setup -delete   # remove the stored settings
 ```
 
-The setup command accepts the name of the setting to change, never its value:
+The setup command requires the name of the setting to change and never accepts its value,
+so a single setting is set up at a time:
 the value is always asked interactively, so the API token does not end up in the shell history
 and it is not echoed while being typed.
 The stored value is offered as the default one, keep it by pressing enter.
@@ -105,7 +109,7 @@ You can create or manage your API tokens here:
 
 https://id.atlassian.com/manage-profile/security/api-tokens
 
-Create a new API token, copy it, and use it as the API token asked by `jira-issue-selector setup`.
+Create a new API token, copy it, and use it as the API token asked by `jira-issue-selector setup apikey`.
 
 ## Remarks
 

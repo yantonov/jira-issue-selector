@@ -37,13 +37,9 @@ func newCommand(keychain configuration.Keychain, output *bytes.Buffer) Command {
 	}
 }
 
-func TestEverySettingIsAskedByDefault(t *testing.T) {
-	settings, err := settingsToAsk([]string{})
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if len(settings) != len(configuration.KeychainKeys) {
-		t.Errorf("Every setting is expected to be asked, got %v", settings)
+func TestSettingNameIsRequired(t *testing.T) {
+	if _, err := settingsToAsk([]string{}); err == nil {
+		t.Errorf("A missing setting name is expected to be reported, nothing is set up at once")
 	}
 }
 
@@ -108,8 +104,21 @@ func TestNothingIsAskedWithoutTerminal(t *testing.T) {
 	keychain := NewFakeKeychain()
 	output := &bytes.Buffer{}
 
-	if err := newCommand(keychain, output).Run([]string{}); err == nil {
+	err := newCommand(keychain, output).Run([]string{configuration.KeychainUserKey})
+	if err == nil {
 		t.Errorf("Non interactive run is expected to be reported")
+	}
+	if len(keychain.Values) != 0 {
+		t.Errorf("Nothing is expected to be stored, got %v", keychain.Values)
+	}
+}
+
+func TestNothingIsSetUpWithoutASettingName(t *testing.T) {
+	keychain := NewFakeKeychain()
+	output := &bytes.Buffer{}
+
+	if err := newCommand(keychain, output).Run([]string{}); err == nil {
+		t.Errorf("A setup without a setting name is expected to be reported")
 	}
 	if len(keychain.Values) != 0 {
 		t.Errorf("Nothing is expected to be stored, got %v", keychain.Values)

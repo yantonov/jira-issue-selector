@@ -39,14 +39,11 @@ func (e Command) Run(args []string) error {
 		output := flags.Output()
 		fmt.Fprintf(output, "Store JIRA credentials in the keychain provided by your OS,\n")
 		fmt.Fprintf(output, "under the %s service name, one entry per setting.\n", configuration.KeychainService)
-		fmt.Fprintf(output, "The value is always asked interactively, it is never taken from the command line.\n\n")
+		fmt.Fprintf(output, "The value is always asked interactively, it is never taken from the command line.\n")
+		fmt.Fprintf(output, "One setting is set up at a time, its name is required.\n\n")
 
 		fmt.Fprintf(output, "Usage:\n")
 		configuration.PrintUsageEntries(output, []configuration.UsageEntry{
-			{
-				Name:        "jira-issue-selector setup",
-				Description: "ask for every setting",
-			},
 			{
 				Name:        "jira-issue-selector setup <setting>",
 				Description: "ask for a single setting, the other ones are kept",
@@ -98,7 +95,9 @@ func (e Command) Run(args []string) error {
 
 func settingsToAsk(args []string) ([]string, error) {
 	if len(args) == 0 {
-		return configuration.KeychainKeys, nil
+		return nil, fmt.Errorf(
+			"the name of the setting to set up is required, expected one of: %s",
+			strings.Join(configuration.KeychainKeys, ", "))
 	}
 	if len(args) > 1 {
 		return nil, fmt.Errorf(
