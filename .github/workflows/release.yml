@@ -31,4 +31,5 @@ jobs:
         goarch: ${{ matrix.goarch }}
         goversion: "1.21"
         project_path: "./cmd/jira-issue-selector"
+        ldflags: -X jira-ticket-selector/lib/version.Version=${{ github.ref_name }} -X jira-ticket-selector/lib/version.Commit=${{ github.sha }}
         

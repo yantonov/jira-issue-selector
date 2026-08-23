@@ -24,6 +24,10 @@ func (e CommandLineArgumentConfigLoader) Load(args []string) Config {
 				Name:        "jira-issue-selector setup [setting]",
 				Description: "store the credentials in the " + KeychainService + " keychain entry",
 			},
+			{
+				Name:        "jira-issue-selector version, -v, --version",
+				Description: "print the version and the commit it was built from",
+			},
 		})
 		fmt.Fprintln(output)
 

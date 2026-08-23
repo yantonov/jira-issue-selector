@@ -6,7 +6,8 @@
 2. [Installation](#installation)
 3. [Settings](#settings)
 4. [Getting JIRA API key](#getting-jira-api-key)
-5. [Remarks](#remarks)
+5. [Version](#version)
+6. [Remarks](#remarks)
 
 ## Use case
 
@@ -106,6 +107,23 @@ You can create or manage your API tokens here:
 https://id.atlassian.com/manage-profile/security/api-tokens
 
 Create a new API token, copy it, and use it as the API token asked by `jira-issue-selector setup`.
+
+## Version
+
+```
+    jira-issue-selector version
+    jira-issue-selector -v
+    jira-issue-selector --version
+```
+
+```
+    version: v1.0.0
+    commit:  8f07524455f6c6f63fa0fc5c873cf99de2f38796
+```
+
+A released binary reports the tag it was built from.
+A binary built from the sources reports `dev` and the commit taken from the build info,
+followed by `(modified)` when the checkout had uncommitted changes.
 
 ## Remarks
 
