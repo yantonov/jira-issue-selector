@@ -11,6 +11,10 @@ type Config struct {
 	DisplayFormat      string
 }
 
+func (e Config) HasEveryCredential() bool {
+	return e.User != "" && e.HostName != "" && e.ApiKey != ""
+}
+
 const DefaultTerminalStatuses = "Done, Killed, Closed, Incomplete, Resolved, Canceled"
 const DisplayFormatDefault = "default"
 const DisplayFormatVerbose = "verbose"

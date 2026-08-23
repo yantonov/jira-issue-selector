@@ -14,44 +14,57 @@ const JIRADisplayFormat = "JIRA_DISPLAY_FORMAT"
 
 type EnvVarConfigLoader struct{}
 
+// Load leaves the undefined variables empty,
+// the defaults are applied by the MainConfigReader once every source is merged.
 func (e EnvVarConfigLoader) Load() Config {
-	user, b := os.LookupEnv(JIRAUserEnvVar)
-	if !b {
-		user = ""
-	}
+	terminalStatuses := lookupEnv(JIRATerminalStatuses)
 
-	hostname, b := os.LookupEnv(JIRAHostNameEnvVar)
-	if !b {
-		hostname = ""
+	config := Config{
+		User:               lookupEnv(JIRAUserEnvVar),
+		HostName:           lookupEnv(JIRAHostNameEnvVar),
+		ApiKey:             lookupEnv(JIRAApiKeyEnvVar),
+		IncludeTicketTitle: lookupEnv(JIRAIncludeTicketTitle) != "",
+		DisplayFormat:      lookupEnv(JIRADisplayFormat),
 	}
-
-	apiKey, b := os.LookupEnv(JIRAApiKeyEnvVar)
-	if !b {
-		apiKey = ""
+	if terminalStatuses != "" {
+		config.TerminalStatuses = ParseTerminalStatuses(terminalStatuses)
 	}
+	return config
+}
 
-	terminalStatuses, b := os.LookupEnv(JIRATerminalStatuses)
-	if !b {
-		terminalStatuses = DefaultTerminalStatuses
+func lookupEnv(name string) string {
+	value, defined := os.LookupEnv(name)
+	if !defined {
+		return ""
 	}
+	return strings.TrimSpace(value)
+}
 
-	includeTicketTitleEnvVar, b := os.LookupEnv(JIRAIncludeTicketTitle)
-	includeTicketTitle := false
-	if b && strings.TrimSpace(includeTicketTitleEnvVar) != "" {
-		includeTicketTitle = true
-	}
-
-	displayFormat, b := os.LookupEnv(JIRADisplayFormat)
-	if !b || strings.TrimSpace(displayFormat) == "" {
-		displayFormat = DisplayFormatDefault
-	}
-
-	return Config{
-		HostName:           hostname,
-		User:               user,
-		ApiKey:             apiKey,
-		TerminalStatuses:   ParseTerminalStatuses(terminalStatuses),
-		IncludeTicketTitle: includeTicketTitle,
-		DisplayFormat:      displayFormat,
+func EnvVarDescriptions() []UsageEntry {
+	return []UsageEntry{
+		{
+			Name:        JIRAUserEnvVar,
+			Description: "JIRA user, overrides the stored one",
+		},
+		{
+			Name:        JIRAHostNameEnvVar,
+			Description: "JIRA hostname, overrides the stored one",
+		},
+		{
+			Name:        JIRAApiKeyEnvVar,
+			Description: "JIRA API token, overrides the stored one",
+		},
+		{
+			Name:        JIRATerminalStatuses,
+			Description: "same as -terminal-statuses",
+		},
+		{
+			Name:        JIRAIncludeTicketTitle,
+			Description: "same as -include-ticket-title, any non empty value enables it",
+		},
+		{
+			Name:        JIRADisplayFormat,
+			Description: "same as -format",
+		},
 	}
 }

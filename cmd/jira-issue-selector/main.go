@@ -7,10 +7,12 @@ import (
 )
 
 func main() {
-	issueId, err := lib.GetIssueId()
+	issueId, err := lib.Run(os.Args[1:])
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	fmt.Println(issueId)
+	if issueId != "" {
+		fmt.Println(issueId)
+	}
 }

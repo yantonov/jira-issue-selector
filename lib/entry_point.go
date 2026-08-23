@@ -4,15 +4,31 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/charmbracelet/huh"
 	"jira-ticket-selector/lib/configuration"
+	"jira-ticket-selector/lib/setup"
 	"jira-ticket-selector/lib/ui"
 	"os"
 	"os/signal"
+
+	"github.com/charmbracelet/huh"
 )
 
-func GetIssueId() (string, error) {
-	config := configuration.MainConfigReader{}.Load()
+const SetupCommand = "setup"
+
+// Run returns an empty issue id when another command than the selection was executed.
+func Run(args []string) (string, error) {
+	keychain := configuration.SystemKeychain{}
+	if len(args) > 0 && args[0] == SetupCommand {
+		return "", setup.Run(keychain, args[1:])
+	}
+	return GetIssueId(keychain, args)
+}
+
+func GetIssueId(keychain configuration.Keychain, args []string) (string, error) {
+	config, err := configuration.MainConfigReader{Keychain: keychain}.Load(args)
+	if err != nil {
+		return "", err
+	}
 	if err := configuration.ValidateConfig(config); err != nil {
 		return "", fmt.Errorf("invalid configuration: %s", err)
 	}

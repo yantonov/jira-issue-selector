@@ -9,11 +9,7 @@ mkdir -p "${INSTALL_DIR}"
 
 BUILD_ARTIFACT="target/jira-issue-selector"
 
-if [ -f "${BUILD_ARTIFACT}" ]; then
-    cp target/jira-issue-selector "${INSTALL_DIR}"
-    echo "Installed to ${INSTALL_DIR}"
-else
-    echo "binary artifact not found"
-    echo "build it first: ./bin/build.sh"
-    exit 1
-fi
+./bin/build.sh
+
+cp "${BUILD_ARTIFACT}" "${INSTALL_DIR}"
+echo "Installed to ${INSTALL_DIR}"
