@@ -1,5 +1,7 @@
 package configuration
 
+// KeychainConfigLoader reads the credentials stored in the keychain.
+// Load returns an empty Config along with the error when the keychain cannot be read.
 type KeychainConfigLoader struct {
 	Keychain Keychain
 }

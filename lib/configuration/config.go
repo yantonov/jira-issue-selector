@@ -9,6 +9,10 @@ type Config struct {
 	TerminalStatuses   []string
 	IncludeTicketTitle bool // if true, the ticket title will be added if no custom task name is provided
 	DisplayFormat      string
+	// KeychainFailure is set when the stored credentials could not be read.
+	// It is not fatal, the environment may define every credential,
+	// it is only reported when a credential turns out to be missing.
+	KeychainFailure error
 }
 
 func (e Config) HasEveryCredential() bool {

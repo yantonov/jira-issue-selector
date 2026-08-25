@@ -24,7 +24,9 @@ func (e MainConfigReader) Load(args []string) (Config, error) {
 	if !config.HasEveryCredential() {
 		credentials, err := KeychainConfigLoader{Keychain: e.Keychain}.Load()
 		if err != nil {
-			return Config{}, err
+			// an unreachable keychain holds no credential, it must not discard the environment:
+			// the failure is reported by ValidateConfig, and only when a credential is missing
+			config.KeychainFailure = err
 		}
 		if config.User == "" {
 			config.User = credentials.User
@@ -58,13 +60,13 @@ func (e MainConfigReader) Load(args []string) (Config, error) {
 
 func ValidateConfig(config Config) error {
 	if config.User == "" {
-		return missingCredential("User", KeychainUserKey, JIRAUserEnvVar)
+		return missingCredential("User", KeychainUserKey, JIRAUserEnvVar, config.KeychainFailure)
 	}
 	if config.HostName == "" {
-		return missingCredential("Hostname", KeychainHostNameKey, JIRAHostNameEnvVar)
+		return missingCredential("Hostname", KeychainHostNameKey, JIRAHostNameEnvVar, config.KeychainFailure)
 	}
 	if config.ApiKey == "" {
-		return missingCredential("JIRA API KEY", KeychainApiKeyKey, JIRAApiKeyEnvVar)
+		return missingCredential("JIRA API KEY", KeychainApiKeyKey, JIRAApiKeyEnvVar, config.KeychainFailure)
 	}
 	if len(config.TerminalStatuses) == 0 {
 		return fmt.Errorf("Terminal statuses are required. You can define them using the -terminal-statuses command line arg")
@@ -72,7 +74,14 @@ func ValidateConfig(config Config) error {
 	return nil
 }
 
-func missingCredential(name string, setting string, envVar string) error {
+func missingCredential(name string, setting string, envVar string, keychainFailure error) error {
+	if keychainFailure != nil {
+		return fmt.Errorf(
+			"%s is required, and the stored settings could not be read: %v. Define the %s environment variable",
+			name,
+			keychainFailure,
+			envVar)
+	}
 	return fmt.Errorf(
 		"%s is required. Run 'jira-issue-selector setup %s' to store it in the keychain or define the %s environment variable",
 		name,

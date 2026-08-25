@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"errors"
+	"strings"
 	"testing"
 )
 
@@ -161,13 +162,48 @@ func TestCommandLineArgumentsOverrideTheEnvironmentVariables(t *testing.T) {
 	}
 }
 
-func TestKeychainFailureIsReported(t *testing.T) {
+func TestAnUnavailableKeychainIsNotFatalWhenTheEnvironmentCompletesTheCredentials(t *testing.T) {
 	clearEnvVars(t)
 	keychain := NewFakeKeychain()
 	keychain.Failure = errors.New("keychain is not available")
+	t.Setenv(JIRAUserEnvVar, "env@company.com")
+	t.Setenv(JIRAApiKeyEnvVar, "env-secret")
 
-	if _, err := (MainConfigReader{Keychain: keychain}).Load([]string{}); err == nil {
-		t.Errorf("Keychain failure is expected to be reported")
+	config, err := MainConfigReader{Keychain: keychain}.Load([]string{})
+	if err != nil {
+		t.Fatalf("An unavailable keychain is not expected to fail the load, got %v", err)
+	}
+	if config.User != "env@company.com" || config.ApiKey != "env-secret" {
+		t.Errorf("Credentials defined by the environment are expected to be kept, got %v", config)
+	}
+	if config.KeychainFailure == nil {
+		t.Errorf("The keychain failure is expected to be kept in the config")
+	}
+
+	err = ValidateConfig(config)
+	if err == nil {
+		t.Fatalf("The missing hostname is expected to be reported")
+	}
+	if !strings.Contains(err.Error(), JIRAHostNameEnvVar) ||
+		!strings.Contains(err.Error(), "keychain is not available") {
+		t.Errorf("The error is expected to report the missing credential and the keychain failure, got %v", err)
+	}
+}
+
+func TestAnUnavailableKeychainIsSilentWhenEveryCredentialIsDefined(t *testing.T) {
+	clearEnvVars(t)
+	keychain := NewFakeKeychain()
+	keychain.Failure = errors.New("keychain is not available")
+	t.Setenv(JIRAUserEnvVar, "env@company.com")
+	t.Setenv(JIRAHostNameEnvVar, "https://env.atlassian.net")
+	t.Setenv(JIRAApiKeyEnvVar, "env-secret")
+
+	config, err := MainConfigReader{Keychain: keychain}.Load([]string{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if err := ValidateConfig(config); err != nil {
+		t.Errorf("The configuration is expected to be valid, got %v", err)
 	}
 }
 

@@ -100,6 +100,9 @@ so they come either from the environment or from the keychain.
 When `JIRA_USER`, `JIRA_HOSTNAME` and `JIRA_API_KEY` are all defined,
 the keychain is not accessed at all,
 which is handy on machines without a keychain daemon (headless Linux, CI).
+A keychain that cannot be read is treated as an empty one, it never discards
+the credentials taken from the environment: the failure is reported only when
+a credential is missing from every source.
 
 ## Getting JIRA API key
 
