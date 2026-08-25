@@ -3,7 +3,7 @@ set -o errexit -o nounset
 
 cd "$(dirname "$0")/.."
 
-INSTALL_DIR="${HOME}/bin"
+INSTALL_DIR="${HOME}/.local/bin"
 
 mkdir -p "${INSTALL_DIR}"
 
