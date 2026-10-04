@@ -1,23 +1,27 @@
-.PHONY: build test run fmt check demo install
+.PHONY: help build test run fmt check demo install
 
-build:
+.DEFAULT_GOAL := help
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+
+build: ## build the binary
 	bin/build.sh
 
-test:
+test: ## run all tests
 	bin/test.sh
 
-run:
+run: ## run the built binary
 	bin/run.sh
 
-fmt:
+fmt: ## format code
 	bin/fmt.sh
 
-# full verification: build + test
-check: build test
+check: build test ## full verification (build + test)
 	@echo "ALL CHECKS PASSED"
 
-demo:
+demo: ## start demo JIRA server
 	bin/start-demo.sh
 
-install:
+install: ## build and install to ~/.local/bin
 	bin/install-from-source.sh
