@@ -6,22 +6,25 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 
 build: ## build the binary
-	bin/build.sh
+	mkdir -p target
+	go build -o target/jira-issue-selector ./cmd/jira-issue-selector
 
 test: ## run all tests
-	bin/test.sh
+	go test -v ./...
 
-run: ## run the built binary
-	bin/run.sh
+run: build ## run the built binary
+	./target/jira-issue-selector
 
 fmt: ## format code
-	bin/fmt.sh
+	go fmt ./...
 
 check: build test ## full verification (build + test)
 	@echo "ALL CHECKS PASSED"
 
-demo: ## start demo JIRA server
-	bin/start-demo.sh
+demo: build ## run binary against local demo server
+	JIRA_USER=user JIRA_API_KEY=key JIRA_HOSTNAME=http://localhost:8090 ./target/jira-issue-selector
 
-install: ## build and install to ~/.local/bin
-	bin/install-from-source.sh
+install: build ## build and install to ~/.local/bin
+	mkdir -p "$${HOME}/.local/bin"
+	cp target/jira-issue-selector "$${HOME}/.local/bin"
+	@echo "Installed to $${HOME}/.local/bin"

@@ -16,5 +16,5 @@ Read user, hostname and apikey from the OS keychain or environment variables onl
 - Add a dependency to `go.mod` only for a clear need.
 
 ## Pointers
-- Local development without a real JIRA: `make demo` (`cmd/jira-demo-server/`, `bin/start-demo.sh`).
+- Local development without a real JIRA: `make demo` (`cmd/jira-demo-server/`).
 - End-user install script: `bin/download.sh`.
