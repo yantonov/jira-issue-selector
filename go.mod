@@ -1,6 +1,6 @@
 module jira-ticket-selector
 
-go 1.21
+go 1.26.10
 
 require (
 	github.com/charmbracelet/huh v0.5.1
